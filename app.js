@@ -1,4 +1,3 @@
-// Главный файл приложения
 document.addEventListener('DOMContentLoaded', function() {
     // Инициализация модулей
     NavigationService.init();
@@ -6,11 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Обновление информации пользователя
     UI.updateUserInfo();
-    
-    // Загрузка данных для страниц
-    UI.loadPortfolio();
-    UI.loadMarket();
-    UI.loadSales();
     
     // Обработчики событий
     document.getElementById('logoutBtn').addEventListener('click', function() {
