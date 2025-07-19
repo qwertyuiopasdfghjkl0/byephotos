@@ -51,6 +51,9 @@ const UI = {
             document.getElementById('photosCount').textContent = '0';
             document.getElementById('salesCount').textContent = '0';
             document.getElementById('balanceValue').textContent = '0 ₽';
+        updateUserInfo() {
+    const user = StorageService.getCurrentUser();
+    if (user) {
         }
     },
     
@@ -136,3 +139,7 @@ const UI = {
 };
 
 window.UI = UI;
+        // Обновляем статистику на главной странице
+        document.getElementById('userPhotosCount').textContent = user.photos;
+        document.getElementById('userBalanceValue').textContent = `${user.balance} ₽`;
+    } else {
