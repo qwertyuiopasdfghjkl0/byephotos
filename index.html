@@ -8,6 +8,70 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Модальное окно регистрации/входа -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeAuthModal">&times;</span>
+            <div class="modal-header">
+                <h2>Добро пожаловать в PhotoMarket</h2>
+                <p>Продавайте и покупайте уникальные фотографии</p>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="login">Вход</div>
+                <div class="tab" data-tab="register">Регистрация</div>
+            </div>
+            
+            <div id="loginTab" class="tab-content active">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" class="form-control" placeholder="Введите ваш email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">Пароль</label>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="Введите пароль" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Войти
+                    </button>
+                </form>
+            </div>
+            
+            <div id="registerTab" class="tab-content">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerName">Имя</label>
+                        <input type="text" id="registerName" class="form-control" placeholder="Введите ваше имя" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" class="form-control" placeholder="Введите ваш email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerPassword">Пароль</label>
+                        <input type="password" id="registerPassword" class="form-control" placeholder="Придумайте пароль" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Подтвердите пароль</label>
+                        <input type="password" id="registerConfirmPassword" class="form-control" placeholder="Повторите пароль" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-user-plus"></i>
+                        Зарегистрироваться
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
     <!-- Уведомление -->
     <div class="notification notification-success">
         <div class="notification-icon">
@@ -53,7 +117,7 @@
             <section class="hero">
                 <h1>Продавайте ваши фотографии за рубли</h1>
                 <p>Присоединяйтесь к сообществу профессиональных фотографов. Загружайте свои работы, устанавливайте цены в рублях и получайте доход от каждой продажи.</p>
-                <button class="btn btn-ruble">
+                <button class="btn btn-ruble" id="startSellingBtn">
                     <i class="fas fa-upload"></i>
                     Начать продавать
                 </button>
@@ -168,7 +232,35 @@
                         </div>
                         
                         <div class="gallery-grid" id="galleryGrid">
-                            <!-- Фотографии будут загружены через JS -->
+                            <div class="photo-card">
+                                <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Горный пейзаж" class="photo-img">
+                                <div class="photo-info">
+                                    <div class="photo-title">Горный пейзаж на рассвете</div>
+                                    <div class="photo-meta">
+                                        <span>15 продаж</span>
+                                        <span class="photo-price">850 ₽</span>
+                                    </div>
+                                    <button class="btn btn-ruble" style="width:100%; margin-top:10px;">
+                                        <i class="fas fa-pencil-alt"></i>
+                                        Редактировать
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="photo-card">
+                                <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Лесной туман" class="photo-img">
+                                <div class="photo-info">
+                                    <div class="photo-title">Туманный лес</div>
+                                    <div class="photo-meta">
+                                        <span>8 продаж</span>
+                                        <span class="photo-price">650 ₽</span>
+                                    </div>
+                                    <button class="btn btn-ruble" style="width:100%; margin-top:10px;">
+                                        <i class="fas fa-pencil-alt"></i>
+                                        Редактировать
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </section>
                 </div>
@@ -228,7 +320,20 @@
                             </tr>
                         </thead>
                         <tbody id="salesTableBody">
-                            <!-- Данные будут загружены через JS -->
+                            <tr>
+                                <td>Горный пейзаж</td>
+                                <td>ООО "Рекламное агентство"</td>
+                                <td>12.05.2023</td>
+                                <td>850 ₽</td>
+                                <td><span style="color: #2ecc71;">Оплачено</span></td>
+                            </tr>
+                            <tr>
+                                <td>Туманный лес</td>
+                                <td>ИП Смирнов А.В.</td>
+                                <td>09.05.2023</td>
+                                <td>650 ₽</td>
+                                <td><span style="color: #2ecc71;">Оплачено</span></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -252,7 +357,27 @@
                 </div>
                 
                 <div class="gallery-grid" id="portfolioGrid">
-                    <!-- Данные будут загружены через JS -->
+                    <div class="photo-card">
+                        <img src="https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Морской берег" class="photo-img">
+                        <div class="photo-info">
+                            <div class="photo-title">Скалистый берег</div>
+                            <div class="photo-meta">
+                                <span>22 продажи</span>
+                                <span class="photo-price">1,200 ₽</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="photo-card">
+                        <img src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Поле цветов" class="photo-img">
+                        <div class="photo-info">
+                            <div class="photo-title">Цветущее поле</div>
+                            <div class="photo-meta">
+                                <span>12 продаж</span>
+                                <span class="photo-price">750 ₽</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
@@ -302,7 +427,35 @@
                 </div>
                 
                 <div class="gallery-grid" id="marketGrid">
-                    <!-- Данные будут загружены через JS -->
+                    <div class="photo-card">
+                        <img src="https://images.unsplash.com/photo-1505142468610-359e7d316be0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Осенний лес" class="photo-img">
+                        <div class="photo-info">
+                            <div class="photo-title">Осенний лес</div>
+                            <div class="photo-meta">
+                                <span>Автор: Анна Иванова</span>
+                                <span class="photo-price">600 ₽</span>
+                            </div>
+                            <button class="btn btn-ruble" style="width:100%; margin-top:10px;">
+                                <i class="fas fa-shopping-cart"></i>
+                                Купить
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="photo-card">
+                        <img src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Звездное небо" class="photo-img">
+                        <div class="photo-info">
+                            <div class="photo-title">Звездное небо</div>
+                            <div class="photo-meta">
+                                <span>Автор: Сергей Петров</span>
+                                <span class="photo-price">1,250 ₽</span>
+                            </div>
+                            <button class="btn btn-ruble" style="width:100%; margin-top:10px;">
+                                <i class="fas fa-shopping-cart"></i>
+                                Купить
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
