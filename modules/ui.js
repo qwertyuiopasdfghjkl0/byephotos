@@ -26,7 +26,6 @@ const UI = {
         
         notification.classList.add('show');
         
-        // Скрываем уведомление через 3 секунды
         setTimeout(() => {
             notification.classList.remove('show');
         }, 3000);
@@ -44,13 +43,20 @@ const UI = {
             document.getElementById('photosCount').textContent = user.photos;
             document.getElementById('salesCount').textContent = user.sales;
             document.getElementById('balanceValue').textContent = `${user.balance} ₽`;
+        } else {
+            document.getElementById('userAvatar').textContent = 'Г';
+            document.getElementById('userAvatarLg').textContent = 'Г';
+            document.getElementById('userName').textContent = 'Гость';
+            document.getElementById('userEmail').textContent = 'Вы не вошли в систему';
+            document.getElementById('photosCount').textContent = '0';
+            document.getElementById('salesCount').textContent = '0';
+            document.getElementById('balanceValue').textContent = '0 ₽';
         }
     },
     
     // Загрузить портфолио
     loadPortfolio() {
-        const portfolioGrid = document.getElementById('portfolioGrid');
-        portfolioGrid.innerHTML = `
+        document.getElementById('portfolioGrid').innerHTML = `
             <div class="photo-card">
                 <img src="https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Морской берег" class="photo-img">
                 <div class="photo-info">
@@ -61,7 +67,6 @@ const UI = {
                     </div>
                 </div>
             </div>
-            
             <div class="photo-card">
                 <img src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Поле цветов" class="photo-img">
                 <div class="photo-info">
@@ -77,8 +82,7 @@ const UI = {
     
     // Загрузить рынок
     loadMarket() {
-        const marketGrid = document.getElementById('marketGrid');
-        marketGrid.innerHTML = `
+        document.getElementById('marketGrid').innerHTML = `
             <div class="photo-card">
                 <img src="https://images.unsplash.com/photo-1505142468610-359e7d316be0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Осенний лес" class="photo-img">
                 <div class="photo-info">
@@ -93,7 +97,6 @@ const UI = {
                     </button>
                 </div>
             </div>
-            
             <div class="photo-card">
                 <img src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Звездное небо" class="photo-img">
                 <div class="photo-info">
@@ -113,8 +116,7 @@ const UI = {
     
     // Загрузить историю продаж
     loadSales() {
-        const salesTableBody = document.getElementById('salesTableBody');
-        salesTableBody.innerHTML = `
+        document.getElementById('salesTableBody').innerHTML = `
             <tr>
                 <td>Горный пейзаж</td>
                 <td>ООО "Рекламное агентство"</td>
@@ -133,7 +135,4 @@ const UI = {
     }
 };
 
-// Экспорт модуля
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-    module.exports = UI;
-}
+window.UI = UI;
