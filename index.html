@@ -6,6 +6,7 @@
     <title>PhotoMarket - Продавайте фото за рубли</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Стили остаются без изменений */
         :root {
             --primary: #4361ee;
             --secondary: #3f37c9;
@@ -1198,28 +1199,89 @@
     </div>
     
     <script>
-        // Навигация по страницам
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Удаляем активный класс у всех ссылок
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                // Добавляем активный класс текущей ссылке
-                this.classList.add('active');
-                
-                const pageId = this.dataset.page;
-                
+        // === Ключевое улучшение: принудительный сброс кэша при загрузке страницы ===
+        // Добавляем случайный параметр к URL при загрузке страницы
+        if (performance.navigation.type === 1) {
+            // Страница была перезагружена
+            window.location.href = window.location.href.split('?')[0] + '?nocache=' + Date.now();
+        }
+        
+        // === Навигация по страницам ===
+        // Инициализация навигации
+        function initNavigation() {
+            // Показываем главную страницу при загрузке
+            document.getElementById('home').classList.add('active');
+            document.querySelector('[data-page="home"]').classList.add('active');
+            
+            // Обработчики для навигационных ссылок
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Удаляем активный класс у всех ссылок
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    // Добавляем активный класс текущей ссылке
+                    this.classList.add('active');
+                    
+                    const pageId = this.dataset.page;
+                    
+                    // Скрываем все страницы
+                    document.querySelectorAll('.page').forEach(page => {
+                        page.classList.remove('active');
+                    });
+                    
+                    // Показываем выбранную страницу
+                    document.getElementById(pageId).classList.add('active');
+                    
+                    // Обновляем URL в адресной строке
+                    history.pushState(null, null, `#${pageId}`);
+                });
+            });
+            
+            // Обработка изменения истории браузера
+            window.addEventListener('popstate', function() {
+                const hash = window.location.hash.substring(1);
+                if (hash) {
+                    // Скрываем все страницы
+                    document.querySelectorAll('.page').forEach(page => {
+                        page.classList.remove('active');
+                    });
+                    
+                    // Показываем страницу по хэшу
+                    document.getElementById(hash).classList.add('active');
+                    
+                    // Обновляем активную ссылку
+                    document.querySelectorAll('.nav-link').forEach(l => {
+                        l.classList.remove('active');
+                        if (l.dataset.page === hash) {
+                            l.classList.add('active');
+                        }
+                    });
+                }
+            });
+            
+            // Проверяем хэш при загрузке
+            const initialHash = window.location.hash.substring(1);
+            if (initialHash) {
                 // Скрываем все страницы
                 document.querySelectorAll('.page').forEach(page => {
                     page.classList.remove('active');
                 });
                 
-                // Показываем выбранную страницу
-                document.getElementById(pageId).classList.add('active');
-            });
-        });
+                // Показываем страницу по хэшу
+                document.getElementById(initialHash).classList.add('active');
+                
+                // Обновляем активную ссылку
+                document.querySelectorAll('.nav-link').forEach(l => {
+                    l.classList.remove('active');
+                    if (l.dataset.page === initialHash) {
+                        l.classList.add('active');
+                    }
+                });
+            }
+        }
         
+        // === Остальные функции ===
         // Элементы DOM
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
@@ -1349,6 +1411,9 @@
         
         // Инициализация страницы
         document.addEventListener('DOMContentLoaded', () => {
+            // Инициализируем навигацию
+            initNavigation();
+            
             // Заполняем данные пользователя
             document.getElementById('userName').textContent = 'Иван Петров';
             document.getElementById('userEmail').textContent = 'ivan@example.com';
