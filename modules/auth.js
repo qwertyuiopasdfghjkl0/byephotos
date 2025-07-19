@@ -52,7 +52,4 @@ const AuthService = {
     }
 };
 
-// Экспорт модуля
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-    module.exports = AuthService;
-}
+window.AuthService = AuthService;
