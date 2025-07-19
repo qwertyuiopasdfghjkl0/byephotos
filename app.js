@@ -3,6 +3,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // Инициализация модулей
     NavigationService.init();
     UploadService.init();
+    // В конец обработчика DOMContentLoaded в app.js
+// Обновляем пользовательскую статистику
+document.addEventListener('DOMContentLoaded', function() {
+    // ... существующий код ...
+    
+    // Функция для обновления пользовательской статистики
+    function updateUserStats() {
+        const user = StorageService.getCurrentUser();
+        if (user) {
+            document.getElementById('userPhotosCount').textContent = user.photos;
+            document.getElementById('userBalanceValue').textContent = `${user.balance} ₽`;
+        } else {
+            document.getElementById('userPhotosCount').textContent = '0';
+            document.getElementById('userBalanceValue').textContent = '0 ₽';
+        }
+    }
+    
+    // Обновляем статистику при загрузке
+    updateUserStats();
+    
+    // Обновляем статистику при изменениях
+    document.getElementById('uploadForm').addEventListener('submit', function() {
+        setTimeout(updateUserStats, 1600);
+    });
+});
     
     // Обновление информации пользователя
     UI.updateUserInfo();
