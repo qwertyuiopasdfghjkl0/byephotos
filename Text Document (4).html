@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhotoMarket - Продавайте ваши фотографии</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --dark: #2b2d42;
+            --light: #f8f9fa;
+            --gray: #adb5bd;
+            --danger: #e63946;
+            --warning: #ff9e00;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Шапка */
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .logo i {
+            font-size: 28px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+        
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: modalOpen 0.4s;
+        }
+        
+        @keyframes modalOpen {
+            from {opacity: 0; transform: translateY(-50px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .modal-header {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .modal-header h2 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--light);
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            text-align: center;
+            flex: 1;
+            font-weight: 600;
+            color: var(--gray);
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Герой секция */
+        .hero {
+            padding: 80px 0 50px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            color: var(--dark);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        /* Основной контент */
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .upload-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--gray);
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #fafbff;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: #f0f4ff;
+        }
+        
+        .upload-icon {
+            font-size: 60px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .upload-area h3 {
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .upload-area p {
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .preview-container {
+            display: none;
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .image-preview {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--gray);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .price-input {
+            position: relative;
+        }
+        
+        .price-input span {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+        
+        .price-input input {
+            padding-left: 40px;
+        }
+        
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            height: fit-content;
+        }
+        
+        .user-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .user-avatar-lg {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            margin: 0 auto 20px;
+            border: 4px solid white;
+            box-shadow: 0 0 0 4px var(--primary);
+        }
+        
+        .user-name {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        
+        .user-email {
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: #f0f4ff;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .balance {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .balance-label {
+            font-size: 16px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        .balance-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        /* Галерея */
+        .gallery-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+        }
+        
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .photo-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+            position: relative;
+        }
+        
+        .photo-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .photo-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .photo-info {
+            padding: 15px;
+        }
+        
+        .photo-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .photo-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .photo-price {
+            color: var(--warning);
+            font-weight: 700;
+        }
+        
+        /* Уведомления */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transform: translateX(150%);
+            transition: transform 0.5s;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+        
+        .notification-success .notification-icon {
+            background: var(--success);
+        }
+        
+        .notification-info .notification-icon {
+            background: var(--primary);
+        }
+        
+        .notification-content h4 {
+            margin-bottom: 5px;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .hero {
+                padding: 50px 0 30px;
+            }
+            
+            .hero h1 {
+                font-size: 28px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .user-actions .btn-text {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Модальное окно входа/регистрации -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeAuthModal">&times;</span>
+            <div class="modal-header">
+                <h2>Добро пожаловать в PhotoMarket</h2>
+                <p>Продавайте и покупайте уникальные фотографии</p>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="login">Вход</div>
+                <div class="tab" data-tab="register">Регистрация</div>
+            </div>
+            
+            <!-- Форма входа -->
+            <div id="loginTab" class="tab-content active">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" class="form-control" placeholder="Введите ваш email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">Пароль</label>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="Введите пароль" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Войти
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Форма регистрации -->
+            <div id="registerTab" class="tab-content">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerName">Имя</label>
+                        <input type="text" id="registerName" class="form-control" placeholder="Введите ваше имя" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" class="form-control" placeholder="Введите ваш email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerPassword">Пароль</label>
+                        <input type="password" id="registerPassword" class="form-control" placeholder="Придумайте пароль" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Подтвердите пароль</label>
+                        <input type="password" id="registerConfirmPassword" class="form-control" placeholder="Повторите пароль" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-user-plus"></i>
+                        Зарегистрироваться
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Уведомление -->
+    <div class="notification notification-success">
+        <div class="notification-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <div class="notification-content">
+            <h4>Фото загружено!</h4>
+            <p>Ваша фотография успешно добавлена на продажу</p>
+        </div>
+    </div>
+    
+    <!-- Шапка -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <i class="fas fa-camera-retro"></i>
+                    PhotoMarket
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="#" class="active">Главная</a></li>
+                    <li><a href="#">Продажи</a></li>
+                    <li><a href="#">Портфолио</a></li>
+                    <li><a href="#">Рынок</a></li>
+                    <li><a href="#">Поддержка</a></li>
+                </ul>
+                
+                <div class="user-actions">
+                    <div class="user-avatar" id="userAvatar">Г</div>
+                    <button class="btn btn-outline" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="btn-text">Выйти</span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- Герой секция -->
+        <section class="hero">
+            <h1>Продавайте ваши фотографии по всему миру</h1>
+            <p>Присоединяйтесь к сообществу профессиональных фотографов. Загружайте свои работы, устанавливайте цены и получайте доход от каждой продажи.</p>
+        </section>
+        
+        <!-- Основной контент -->
+        <div class="content">
+            <div class="main-content">
+                <!-- Секция загрузки -->
+                <section class="upload-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        Загрузите новую фотографию
+                    </h2>
+                    
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <h3>Перетащите фото для продажи</h3>
+                        <p>Поддерживаются форматы JPG, PNG, размер до 20MB</p>
+                        <button class="btn btn-primary" id="selectFileBtn">
+                            <i class="fas fa-folder-open"></i>
+                            Выбрать файл
+                        </button>
+                        <input type="file" id="fileInput" class="file-input" accept="image/*">
+                    </div>
+                    
+                    <div class="preview-container" id="previewContainer">
+                        <img src="" alt="Предпросмотр" class="image-preview" id="imagePreview">
+                    </div>
+                    
+                    <form id="uploadForm">
+                        <div class="form-group">
+                            <label for="photoTitle">Название фотографии</label>
+                            <input type="text" id="photoTitle" class="form-control" placeholder="Введите название" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="photoDescription">Описание</label>
+                            <textarea id="photoDescription" class="form-control" rows="3" placeholder="Расскажите о фотографии..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="photoCategory">Категория</label>
+                            <select id="photoCategory" class="form-control">
+                                <option value="nature">Природа</option>
+                                <option value="travel">Путешествия</option>
+                                <option value="people">Люди</option>
+                                <option value="architecture">Архитектура</option>
+                                <option value="food">Еда</option>
+                                <option value="animals">Животные</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="photoTags">Ключевые слова</label>
+                            <input type="text" id="photoTags" class="form-control" placeholder="пейзаж, горы, закат...">
+                        </div>
+                        
+                        <div class="form-group price-input">
+                            <label for="photoPrice">Цена ($)</label>
+                            <span>$</span>
+                            <input type="number" id="photoPrice" class="form-control" value="25" min="5" max="500" step="5" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-shopping-cart"></i>
+                            Выставить на продажу
+                        </button>
+                    </form>
+                </section>
+                
+                <!-- Галерея -->
+                <section class="gallery-section">
+                    <div class="gallery-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-images"></i>
+                            Ваши фотографии
+                        </h2>
+                        <div>
+                            <button class="btn btn-outline" id="refreshBtn">
+                                <i class="fas fa-sync-alt"></i>
+                                Обновить
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-grid" id="galleryGrid">
+                        <!-- Фотографии будут загружены через JS -->
+                    </div>
+                </section>
+            </div>
+            
+            <!-- Боковая панель -->
+            <aside class="sidebar">
+                <div class="user-info">
+                    <div class="user-avatar-lg" id="userAvatarLg">Г</div>
+                    <div class="user-name" id="userName">Гость</div>
+                    <div class="user-email" id="userEmail">Вы не вошли в систему</div>
+                    <button class="btn btn-outline" id="editProfileBtn">
+                        <i class="fas fa-user-edit"></i>
+                        Редактировать профиль
+                    </button>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="photosCount">0</div>
+                        <div class="stat-label">Фотографии</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="salesCount">0</div>
+                        <div class="stat-label">Продажи</div>
+                    </div>
+                </div>
+                
+                <div class="balance">
+                    <div class="balance-label">Ваш баланс</div>
+                    <div class="balance-value" id="balanceValue">$0</div>
+                    <button class="btn btn-outline" id="withdrawBtn" style="background: rgba(255,255,255,0.2); color: white; border-color: white;">
+                        <i class="fas fa-wallet"></i>
+                        Вывести средства
+                    </button>
+                </div>
+            </aside>
+        </div>
+    </div>
+    
+    <script>
+        // ====== Глобальные переменные ======
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        let photos = JSON.parse(localStorage.getItem('photos')) || [];
+        
+        // ====== Элементы DOM ======
+        // Модальные окна
+        const authModal = document.getElementById('authModal');
+        const closeAuthModal = document.getElementById('closeAuthModal');
+        const loginTab = document.getElementById('loginTab');
+        const registerTab = document.getElementById('registerTab');
+        const tabs = document.querySelectorAll('.tab');
+        
+        // Формы
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const uploadForm = document.getElementById('uploadForm');
+        
+        // Элементы пользователя
+        const userAvatar = document.getElementById('userAvatar');
+        const userAvatarLg = document.getElementById('userAvatarLg');
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        const logoutBtn = document.getElementById('logoutBtn');
+        
+        // Статистика
+        const photosCount = document.getElementById('photosCount');
+        const salesCount = document.getElementById('salesCount');
+        const balanceValue = document.getElementById('balanceValue');
+        
+        // Загрузка файлов
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const selectFileBtn = document.getElementById('selectFileBtn');
+        const previewContainer = document.getElementById('previewContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        // Галерея
+        const galleryGrid = document.getElementById('galleryGrid');
+        const refreshBtn = document.getElementById('refreshBtn');
+        
+        // Уведомление
+        const notification = document.querySelector('.notification');
+        
+        // ====== Инициализация приложения ======
+        document.addEventListener('DOMContentLoaded', () => {
+            // Проверяем авторизацию пользователя
+            checkAuth();
+            
+            // Инициализируем галерею
+            renderGallery();
+            
+            // Обновляем статистику
+            updateStats();
+        });
+        
+        // ====== Функции аутентификации ======
+        function checkAuth() {
+            if (currentUser) {
+                // Пользователь авторизован
+                updateUserInfo();
+                document.querySelector('.user-actions').style.display = 'flex';
+                document.querySelector('.main-content').style.display = 'block';
+            } else {
+                // Пользователь не авторизован
+                authModal.style.display = 'flex';
+                document.querySelector('.user-actions').style.display = 'none';
+                document.querySelector('.main-content').style.display = 'none';
+            }
+        }
+        
+        function updateUserInfo() {
+            if (currentUser) {
+                const firstLetter = currentUser.name.charAt(0).toUpperCase();
+                userAvatar.textContent = firstLetter;
+                userAvatarLg.textContent = firstLetter;
+                userName.textContent = currentUser.name;
+                userEmail.textContent = currentUser.email;
+            }
+        }
+        
+        // ====== Обработчики событий ======
+        // Переключение между вкладками входа и регистрации
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                if (tab.dataset.tab === 'login') {
+                    loginTab.classList.add('active');
+                } else {
+                    registerTab.classList.add('active');
+                }
+            });
+        });
+        
+        // Закрытие модального окна
+        closeAuthModal.addEventListener('click', () => {
+            authModal.style.display = 'none';
+        });
+        
+        // Регистрация нового пользователя
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            // Проверка паролей
+            if (password !== confirmPassword) {
+                showNotification('Ошибка', 'Пароли не совпадают', 'error');
+                return;
+            }
+            
+            // Проверка существующего пользователя
+            if (users.find(user => user.email === email)) {
+                showNotification('Ошибка', 'Пользователь с таким email уже существует', 'error');
+                return;
+            }
+            
+            // Создаем нового пользователя
+            const newUser = {
+                id: Date.now().toString(),
+                name,
+                email,
+                password,
+                photos: 0,
+                sales: 0,
+                balance: 0,
+                joined: new Date().toISOString()
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Автоматически входим под новым пользователем
+            currentUser = newUser;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            showNotification('Успех', 'Регистрация прошла успешно!', 'success');
+            authModal.style.display = 'none';
+            checkAuth();
+            updateStats();
+        });
+        
+        // Вход пользователя
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Поиск пользователя
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                showNotification('Успех', 'Вход выполнен успешно!', 'success');
+                authModal.style.display = 'none';
+                checkAuth();
+                updateStats();
+                renderGallery();
+            } else {
+                showNotification('Ошибка', 'Неверный email или пароль', 'error');
+            }
+        });
+        
+        // Выход пользователя
+        logoutBtn.addEventListener('click', () => {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            checkAuth();
+            showNotification('Информация', 'Вы вышли из системы', 'info');
+        });
+        
+        // Загрузка файлов
+        selectFileBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        fileInput.addEventListener('change', handleFileSelect);
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#4361ee';
+            uploadArea.style.backgroundColor = '#f0f4ff';
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = '#adb5bd';
+            uploadArea.style.backgroundColor = '#fafbff';
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#adb5bd';
+            uploadArea.style.backgroundColor = '#fafbff';
+            
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect();
+            }
+        });
+        
+        // Обработка выбранного файла
+        function handleFileSelect() {
+            const file = fileInput.files[0];
+            
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                    
+                    // Автозаполнение названия
+                    const fileName = file.name.split('.')[0];
+                    document.getElementById('photoTitle').value = fileName;
+                }
+                
+                reader.readAsDataURL(file);
+            } else {
+                showNotification('Ошибка', 'Пожалуйста, выберите файл изображения (JPG, PNG)', 'error');
+            }
+        }
+        
+        // Обработка отправки формы загрузки фото
+        uploadForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                showNotification('Ошибка', 'Для загрузки фото необходимо войти в систему', 'error');
+                return;
+            }
+            
+            if (!fileInput.files.length) {
+                showNotification('Ошибка', 'Пожалуйста, выберите фотографию для загрузки', 'error');
+                return;
+            }
+            
+            // Получаем данные из формы
+            const title = document.getElementById('photoTitle').value;
+            const description = document.getElementById('photoDescription').value;
+            const category = document.getElementById('photoCategory').value;
+            const tags = document.getElementById('photoTags').value;
+            const price = parseFloat(document.getElementById('photoPrice').value);
+            const file = fileInput.files[0];
+            
+            // Показываем загрузку
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Загрузка...';
+            submitBtn.disabled = true;
+            
+            // Имитация отправки на сервер
+            setTimeout(() => {
+                // Создаем объект фотографии
+                const newPhoto = {
+                    id: Date.now().toString(),
+                    userId: currentUser.id,
+                    title,
+                    description,
+                    category,
+                    tags: tags.split(',').map(tag => tag.trim()),
+                    price,
+                    imageUrl: imagePreview.src,
+                    date: new Date().toISOString(),
+                    sales: 0
+                };
+                
+                // Сохраняем фотографию
+                photos.push(newPhoto);
+                localStorage.setItem('photos', JSON.stringify(photos));
+                
+                // Обновляем статистику пользователя
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                if (userIndex !== -1) {
+                    users[userIndex].photos += 1;
+                    localStorage.setItem('users', JSON.stringify(users));
+                    currentUser = users[userIndex];
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    updateUserInfo();
+                    updateStats();
+                }
+                
+                // Показываем уведомление
+                showNotification('Успех', 'Фото успешно загружено!', 'success');
+                
+                // Сбрасываем форму
+                uploadForm.reset();
+                previewContainer.style.display = 'none';
+                fileInput.value = '';
+                
+                // Восстанавливаем кнопку
+                submitBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Выставить на продажу';
+                submitBtn.disabled = false;
+                
+                // Обновляем галерею
+                renderGallery();
+            }, 1500);
+        });
+        
+        // Обновление галереи
+        refreshBtn.addEventListener('click', () => {
+            renderGallery();
+            showNotification('Информация', 'Галерея обновлена', 'info');
+        });
+        
+        // ====== Вспомогательные функции ======
+        // Обновление статистики
+        function updateStats() {
+            if (currentUser) {
+                photosCount.textContent = currentUser.photos;
+                salesCount.textContent = currentUser.sales;
+                balanceValue.textContent = `$${currentUser.balance}`;
+            } else {
+                photosCount.textContent = '0';
+                salesCount.textContent = '0';
+                balanceValue.textContent = '$0';
+            }
+        }
+        
+        // Рендер галереи
+        function renderGallery() {
+            if (!currentUser) {
+                galleryGrid.innerHTML = '<p>Для просмотра галереи необходимо войти в систему</p>';
+                return;
+            }
+            
+            const userPhotos = photos.filter(photo => photo.userId === currentUser.id);
+            
+            if (userPhotos.length === 0) {
+                galleryGrid.innerHTML = '<p>У вас пока нет загруженных фотографий</p>';
+                return;
+            }
+            
+            galleryGrid.innerHTML = '';
+            
+            userPhotos.forEach(photo => {
+                const photoCard = document.createElement('div');
+                photoCard.className = 'photo-card';
+                photoCard.innerHTML = `
+                    <img src="${photo.imageUrl}" alt="${photo.title}" class="photo-img">
+                    <div class="photo-info">
+                        <div class="photo-title">${photo.title}</div>
+                        <div class="photo-meta">
+                            <span>${photo.sales} продаж</span>
+                            <span class="photo-price">$${photo.price}</span>
+                        </div>
+                    </div>
+                `;
+                galleryGrid.appendChild(photoCard);
+            });
+        }
+        
+        // Показать уведомление
+        function showNotification(title, message, type) {
+            const notification = document.querySelector('.notification');
+            const icon = notification.querySelector('.notification-icon');
+            const content = notification.querySelector('.notification-content');
+            
+            content.innerHTML = `<h4>${title}</h4><p>${message}</p>`;
+            
+            // Устанавливаем стили в зависимости от типа
+            if (type === 'success') {
+                notification.className = 'notification notification-success';
+                icon.innerHTML = '<i class="fas fa-check"></i>';
+                icon.style.background = 'var(--success)';
+            } else if (type === 'error') {
+                notification.className = 'notification notification-error';
+                icon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+                icon.style.background = 'var(--danger)';
+            } else {
+                notification.className = 'notification notification-info';
+                icon.innerHTML = '<i class="fas fa-info-circle"></i>';
+                icon.style.background = 'var(--primary)';
+            }
+            
+            notification.classList.add('show');
+            
+            // Скрываем уведомление через 3 секунды
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Имитация покупки (для демонстрации)
+        function simulatePurchase(photoId) {
+            if (!currentUser) return;
+            
+            const photoIndex = photos.findIndex(p => p.id === photoId);
+            if (photoIndex === -1) return;
+            
+            // Обновляем статистику фото
+            photos[photoIndex].sales += 1;
+            localStorage.setItem('photos', JSON.stringify(photos));
+            
+            // Обновляем статистику пользователя (автора)
+            const authorId = photos[photoIndex].userId;
+            const authorIndex = users.findIndex(u => u.id === authorId);
+            if (authorIndex !== -1) {
+                users[authorIndex].sales += 1;
+                users[authorIndex].balance += photos[photoIndex].price;
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                // Если это текущий пользователь, обновляем статистику
+                if (currentUser.id === authorId) {
+                    currentUser = users[authorIndex];
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    updateStats();
+                }
+            }
+            
+            renderGallery();
+            showNotification('Продажа!', `Фотография "${photos[photoIndex].title}" продана!`, 'success');
+        }
+    </script>
+</body>
+</html>
