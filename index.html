@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhotoMarket - Продавайте фото за рубли</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Уведомление -->
+    <div class="notification notification-success">
+        <div class="notification-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <div class="notification-content">
+            <h4>Фото загружено!</h4>
+            <p>Ваша фотография успешно выставлена на продажу</p>
+        </div>
+    </div>
+    
+    <!-- Шапка -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <i class="fas fa-camera-retro"></i>
+                    PhotoMarket
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="#" class="nav-link active" data-page="home">Главная</a></li>
+                    <li><a href="#" class="nav-link" data-page="sales">Продажи</a></li>
+                    <li><a href="#" class="nav-link" data-page="portfolio">Портфолио</a></li>
+                    <li><a href="#" class="nav-link" data-page="market">Рынок</a></li>
+                    <li><a href="#" class="nav-link" data-page="support">Поддержка</a></li>
+                </ul>
+                
+                <div class="user-actions">
+                    <div class="user-avatar" id="userAvatar">Г</div>
+                    <button class="btn btn-outline" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="btn-text">Выйти</span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- Главная страница -->
+        <div id="home" class="page active">
+            <section class="hero">
+                <h1>Продавайте ваши фотографии за рубли</h1>
+                <p>Присоединяйтесь к сообществу профессиональных фотографов. Загружайте свои работы, устанавливайте цены в рублях и получайте доход от каждой продажи.</p>
+                <button class="btn btn-ruble">
+                    <i class="fas fa-upload"></i>
+                    Начать продавать
+                </button>
+            </section>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-images"></i>
+                    </div>
+                    <div class="stat-title">Фотографий продано</div>
+                    <div class="stat-value">24,568</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-title">Активных авторов</div>
+                    <div class="stat-value">1,842</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-ruble-sign"></i>
+                    </div>
+                    <div class="stat-title">Заработано авторами</div>
+                    <div class="stat-value">8.2M ₽</div>
+                </div>
+            </div>
+            
+            <div class="content">
+                <div class="main-content">
+                    <!-- Секция загрузки -->
+                    <section class="section">
+                        <h2 class="section-title">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            Загрузите новую фотографию
+                        </h2>
+                        
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-icon">
+                                <i class="fas fa-images"></i>
+                            </div>
+                            <h3>Перетащите фото для продажи</h3>
+                            <p>Поддерживаются форматы JPG, PNG, размер до 20MB</p>
+                            <button class="btn btn-primary" id="selectFileBtn">
+                                <i class="fas fa-folder-open"></i>
+                                Выбрать файл
+                            </button>
+                            <input type="file" id="fileInput" class="file-input" accept="image/*">
+                        </div>
+                        
+                        <div class="preview-container" id="previewContainer">
+                            <img src="" alt="Предпросмотр" class="image-preview" id="imagePreview">
+                        </div>
+                        
+                        <form id="uploadForm">
+                            <div class="form-group">
+                                <label for="photoTitle">Название фотографии</label>
+                                <input type="text" id="photoTitle" class="form-control" placeholder="Введите название" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="photoDescription">Описание</label>
+                                <textarea id="photoDescription" class="form-control" rows="3" placeholder="Расскажите о фотографии..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="photoCategory">Категория</label>
+                                <select id="photoCategory" class="form-control">
+                                    <option value="nature">Природа</option>
+                                    <option value="travel">Путешествия</option>
+                                    <option value="people">Люди</option>
+                                    <option value="architecture">Архитектура</option>
+                                    <option value="food">Еда</option>
+                                    <option value="animals">Животные</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="photoTags">Ключевые слова</label>
+                                <input type="text" id="photoTags" class="form-control" placeholder="пейзаж, горы, закат...">
+                            </div>
+                            
+                            <div class="form-group price-input">
+                                <label for="photoPrice">Цена (₽)</label>
+                                <span>₽</span>
+                                <input type="number" id="photoPrice" class="form-control" value="500" min="50" max="10000" step="50" required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-ruble" id="submitBtn">
+                                <i class="fas fa-shopping-cart"></i>
+                                Выставить на продажу
+                            </button>
+                        </form>
+                    </section>
+                    
+                    <!-- Галерея -->
+                    <section class="section">
+                        <div class="gallery-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-images"></i>
+                                Ваши фотографии
+                            </h2>
+                            <div>
+                                <button class="btn btn-outline" id="refreshBtn">
+                                    <i class="fas fa-sync-alt"></i>
+                                    Обновить
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="gallery-grid" id="galleryGrid">
+                            <!-- Фотографии будут загружены через JS -->
+                        </div>
+                    </section>
+                </div>
+                
+                <!-- Боковая панель -->
+                <aside class="sidebar">
+                    <div class="user-info">
+                        <div class="user-avatar-lg" id="userAvatarLg">Г</div>
+                        <div class="user-name" id="userName">Гость</div>
+                        <div class="user-email" id="userEmail">Вы не вошли в систему</div>
+                        <button class="btn btn-outline" id="editProfileBtn">
+                            <i class="fas fa-user-edit"></i>
+                            Редактировать профиль
+                        </button>
+                    </div>
+                    
+                    <div class="stats">
+                        <div class="stat-card-sm">
+                            <div class="stat-value" id="photosCount">0</div>
+                            <div class="stat-label">Фотографии</div>
+                        </div>
+                        <div class="stat-card-sm">
+                            <div class="stat-value" id="salesCount">0</div>
+                            <div class="stat-label">Продажи</div>
+                        </div>
+                    </div>
+                    
+                    <div class="balance">
+                        <div class="balance-label">Ваш баланс</div>
+                        <div class="balance-value" id="balanceValue">0 ₽</div>
+                        <button class="btn btn-outline" id="withdrawBtn" style="background: rgba(255,255,255,0.2); color: white; border-color: white;">
+                            <i class="fas fa-wallet"></i>
+                            Вывести средства
+                        </button>
+                    </div>
+                </aside>
+            </div>
+        </div>
+        
+        <!-- Страница Продажи -->
+        <div id="sales" class="page">
+            <section class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line"></i>
+                    История продаж
+                </h2>
+                
+                <div class="table-responsive">
+                    <table class="sales-table">
+                        <thead>
+                            <tr>
+                                <th>Фотография</th>
+                                <th>Покупатель</th>
+                                <th>Дата</th>
+                                <th>Цена</th>
+                                <th>Статус</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salesTableBody">
+                            <!-- Данные будут загружены через JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Страница Портфолио -->
+        <div id="portfolio" class="page">
+            <section class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-book-open"></i>
+                    Ваше портфолио
+                </h2>
+                
+                <div class="gallery-header">
+                    <h3>Лучшие работы</h3>
+                    <button class="btn btn-ruble" id="sharePortfolioBtn">
+                        <i class="fas fa-share-alt"></i>
+                        Поделиться
+                    </button>
+                </div>
+                
+                <div class="gallery-grid" id="portfolioGrid">
+                    <!-- Данные будут загружены через JS -->
+                </div>
+            </section>
+        </div>
+        
+        <!-- Страница Рынок -->
+        <div id="market" class="page">
+            <section class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-store"></i>
+                    Рынок фотографий
+                </h2>
+                
+                <div class="market-filters">
+                    <div class="filter-group">
+                        <label>Категория</label>
+                        <select id="categoryFilter" class="form-control">
+                            <option value="all">Все категории</option>
+                            <option value="nature">Природа</option>
+                            <option value="travel">Путешествия</option>
+                            <option value="people">Люди</option>
+                            <option value="architecture">Архитектура</option>
+                            <option value="food">Еда</option>
+                            <option value="animals">Животные</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Цена (₽)</label>
+                        <select id="priceFilter" class="form-control">
+                            <option value="all">Любая</option>
+                            <option value="0-500">До 500 ₽</option>
+                            <option value="500-1000">500-1,000 ₽</option>
+                            <option value="1000-2000">1,000-2,000 ₽</option>
+                            <option value="2000-">От 2,000 ₽</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Сортировка</label>
+                        <select id="sortFilter" class="form-control">
+                            <option value="popularity">По популярности</option>
+                            <option value="date">По дате добавления</option>
+                            <option value="price-asc">Цена по возрастанию</option>
+                            <option value="price-desc">Цена по убыванию</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="gallery-grid" id="marketGrid">
+                    <!-- Данные будут загружены через JS -->
+                </div>
+            </section>
+        </div>
+        
+        <!-- Страница Поддержка -->
+        <div id="support" class="page">
+            <section class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-headset"></i>
+                    Поддержка
+                </h2>
+                
+                <p>Мы готовы помочь вам с любыми вопросами, связанными с продажей фотографий, получением оплаты или техническими проблемами.</p>
+                
+                <div class="support-options">
+                    <div class="support-card">
+                        <div class="support-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="support-title">Электронная почта</div>
+                        <div class="support-desc">Отправьте нам письмо с описанием проблемы</div>
+                        <a href="mailto:support@photomarket.ru" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            Написать
+                        </a>
+                    </div>
+                    
+                    <div class="support-card">
+                        <div class="support-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="support-title">Онлайн-чат</div>
+                        <div class="support-desc">Чат с поддержкой в реальном времени</div>
+                        <button class="btn btn-primary" id="openChat">
+                            <i class="fas fa-comment"></i>
+                            Открыть чат
+                        </button>
+                    </div>
+                    
+                    <div class="support-card">
+                        <div class="support-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="support-title">База знаний</div>
+                        <div class="support-desc">Ответы на часто задаваемые вопросы</div>
+                        <button class="btn btn-outline" id="knowledgeBaseBtn">
+                            <i class="fas fa-search"></i>
+                            Перейти
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="faq-section" style="margin-top: 40px;">
+                    <h3 class="section-title" style="font-size: 20px;">
+                        <i class="fas fa-question-circle"></i>
+                        Часто задаваемые вопросы
+                    </h3>
+                    
+                    <div class="faq-item" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+                        <h4>Как вывести деньги с баланса?</h4>
+                        <p style="margin-top: 10px; color: var(--gray);">Вы можете вывести средства на банковскую карту или электронный кошелек. Минимальная сумма для вывода - 500 рублей. Обработка запроса занимает до 3 рабочих дней.</p>
+                    </div>
+                    
+                    <div class="faq-item" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+                        <h4>Как установить цену на фотографии?</h4>
+                        <p style="margin-top: 10px; color: var(--gray);">При загрузке фотографии вы можете установить любую цену в рублях от 50 до 10,000 рублей. Мы рекомендуем устанавливать цены в диапазоне 500-2,000 рублей для стандартных лицензий.</p>
+                    </div>
+                    
+                    <div class="faq-item" style="margin-bottom: 20px;">
+                        <h4>Какие форматы файлов поддерживаются?</h4>
+                        <p style="margin-top: 10px; color: var(--gray);">Мы принимаем фотографии в форматах JPEG и PNG. Минимальное разрешение - 1920x1080 пикселей. Максимальный размер файла - 20 МБ.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <!-- Подключаем все JS-файлы -->
+    <script src="modules/storage.js"></script>
+    <script src="modules/auth.js"></script>
+    <script src="modules/navigation.js"></script>
+    <script src="modules/upload.js"></script>
+    <script src="modules/ui.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
